@@ -1,0 +1,60 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Información Meteorológica</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    #weatherChart {
+      max-width: 400px;
+      margin: 0 auto;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-3">
+        <div class="sidebar bg-light p-4">
+          <h2>Selecciona una ciudad</h2>
+          <button class="btn btn-primary btn-block mb-2" onclick="getWeather('Buenos Aires')">Buenos Aires</button>
+          <button class="btn btn-primary btn-block mb-2" onclick="getWeather('Lima')">Lima</button>
+          <button class="btn btn-primary btn-block mb-2" onclick="getWeather('Ciudad de México')">Ciudad de México</button>
+          <button class="btn btn-primary btn-block mb-2" onclick="getWeather('São Paulo')">São Paulo</button>
+          <button class="btn btn-primary btn-block mb-2" onclick="getWeather('Santiago')">Santiago</button>
+          <button class="btn btn-primary btn-block mb-2" onclick="getWeather('Nueva York')">Nueva York</button>
+          <button class="btn btn-primary btn-block mb-2" onclick="getWeather('Los Angeles')">Los Angeles</button>
+          <button class="btn btn-primary btn-block mb-2" onclick="getWeather('Toronto')">Toronto</button>
+          <button class="btn btn-primary btn-block mb-2" onclick="getWeather('Bogotá')">Bogotá</button>
+          <button class="btn btn-primary btn-block mb-2" onclick="getWeather('Caracas')">Caracas</button>
+        </div>
+      </div>
+      <div class="col-lg-9">
+        <div class="content p-4">
+          <h1 class="mb-4">Información Meteorológica</h1>
+          <div class="row">
+            <div class="col-lg-6">
+              <div id="weatherChartContainer">
+                <canvas id="weatherChart"></canvas>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="card">
+                <div class="card-body" id="weatherDataContainer"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // Resto del código JavaScript
+  </script>
+</body>
+</html>

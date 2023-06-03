@@ -1,0 +1,45 @@
+    body {
+      display: flex;
+    }
+
+    .sidebar {
+      flex: 0 0 20px;
+     /* background-color: #f0f0f0;*/  
+      background-color: #4a0404;
+      
+
+      padding: 100px;
+    }
+
+    .content {
+      flex: 1;
+      padding: 20px;
+    }
+
+    .sidebar button {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    #weatherChartContainer {
+      display: flex;
+      align-items: flex-start;
+      max-width: 1000px;
+      margin-bottom: 20px;
+    }
+
+    #weatherChart {
+      flex: 1;
+      max-width: 400px;
+      margin-right: 20px;
+    }
+
+    .weatherDataContainer {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .weatherDataItem {
+      margin-top: 10px;
+      text-align: center;
+    }

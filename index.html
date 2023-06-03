@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Información Meteorológica</title>
+  <style>
+    body {
+      display: flex;
+    }
+
+    h1 {
+    margin-top: 0%;
+    width:300px;
+    margin: 10 auto;
+    text-align: left;
+}
+h2{
+  margin-top: 0%;
+  background-color: white ;
+}
+
+
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      /* flex: 0 0 200px; */
+      background-color: gray;
+      padding: 20px;
+      margin-bottom: 0%;
+      /* height: 500px; */
+    }
+
+    .content {
+      flex: 1;
+      padding: 20px;
+    }
+
+    .sidebar button {
+      display: block;
+      margin-bottom: 20px;
+      
+      }
+
+    #weatherChartContainer {
+
+      display: flex;
+      align-items: flex-start;
+      max-width: 50%;
+      margin-bottom: 20px;
+      /* height: 1000px; */
+    }
+
+    #weatherChart {
+
+      background-color: #dcd97b;
+      flex: 2;
+      /* max-width: 600px; */
+      margin-right: 20px;
+      bottom: 0%;
+    }
+
+    .weatherDataContainer {
+  
+      display: flex;
+      flex-direction: row;
+      /* background-color: lightblue; */
+      /* padding: 20%; */
+    }
+
+    .weatherDataItem {
+
+      display: flex;
+      margin: 5px;
+      flex-direction: column;
+      background-color: yellow; 
+      /* padding: 2%; */
+      text-align: center;
+
+    }
+
+
+  </style>
+
+</head>
+<body>
+  <div class="sidebar">
+    <h2>ELIGE CIUDAD</h2>
+    <button onclick="getWeather('Buenos Aires')">Buenos Aires</button>
+    <button onclick="getWeather('Lima')">Lima</button>
+    <button onclick="getWeather('Ciudad de México')">Ciudad de México</button>
+    <button onclick="getWeather('São Paulo')">São Paulo</button>
+    <button onclick="getWeather('Santiago')">Santiago</button>
+    <button onclick="getWeather('Nueva York')">Nueva York</button>
+    <button onclick="getWeather('Los Angeles')">Los Angeles</button>
+    <button onclick="getWeather('Toronto')">Toronto</button>
+    <button onclick="getWeather('Bogotá')">Bogotá</button>
+    <button onclick="getWeather('Caracas')">Caracas</button>
+  </div>
+
+
+  <div class="content">
+    <h1>INFORMACION METEREOLOGICA</h1>
+    <div id="weatherChartContainer">
+      <canvas id="weatherChart"></canvas>
+      <div class="weatherDataContainer" id="weatherDataContainer"></div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+  <script>
+    let chart;
+
+    async function getWeather(city) {
+      try {
+        const response = await fetch(`/weather/${city}`);
+        const data = await response.json();
+        const temperature = Math.round(data.main.temp - 273.15); // Conversión a Celsius
+        const description = data.weather[0].description;
+        const humidity = data.main.humidity;
+        const windSpeed = data.wind.speed;
+
+        if (chart) {
+          chart.data.labels.push(city);
+          chart.data.datasets[0].data.push(temperature);
+          chart.update();
+        } else {
+          const ctx = document.getElementById('weatherChart').getContext('2d');
+          chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: [city],
+              datasets: [{
+                label: 'Temperatura (°C)',
+                data: [temperature],
+                backgroundColor: '#36a2eb'
+              }]
+            },
+            options: {
+              scales: {
+                y: {
+                  beginAtZero: true
+                }
+              },
+              plugins: {
+                legend: {
+                  display: false
+                },
+                tooltip: {
+                  callbacks: {
+                    label: function (context) {
+                      var label = context.dataset.label || '';
+
+                      if (label) {
+                        label += ': ';
+                      }
+                      label += context.parsed.y + '°C';
+                      return label;
+                    }
+                  }
+                }
+              }
+            }
+          });
+        }
+
+        const weatherDataContainer = document.getElementById('weatherDataContainer');
+
+        const weatherDataItem = document.createElement('div');
+        weatherDataItem.classList.add('weatherDataItem');
+        weatherDataItem.innerHTML = `
+          <p><strong>${city}</strong></p>
+          <p>Descripción: ${description}</p>
+          <p>Humedad: ${humidity}%</p>
+          <p>Velocidad del Viento: ${windSpeed} m/s</p>
+        `;
+
+        weatherDataContainer.appendChild(weatherDataItem);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  </script>
+</body>
+</html>
