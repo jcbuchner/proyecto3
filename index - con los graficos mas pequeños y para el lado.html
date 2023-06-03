@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Información Meteorológica</title>
+  <style>
+    body {
+      display: flex;
+    }
+
+    .sidebar {
+      flex: 0 0 200px;
+      background-color: #f0f0f0;
+      padding: 20px;
+    }
+
+    .content {
+      flex: 1;
+      padding: 20px;
+    }
+
+    .sidebar button {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    #weatherChart {
+      max-width: 400px;
+      margin-bottom: 20px;
+    }
+
+    .weatherData {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+
+    .weatherDataChart {
+      flex-basis: 45%;
+      max-width: 200px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <h2>Selecciona una ciudad</h2>
+    <button onclick="getWeather('Buenos Aires')">Buenos Aires</button>
+    <button onclick="getWeather('Lima')">Lima</button>
+    <button onclick="getWeather('Ciudad de México')">Ciudad de México</button>
+    <button onclick="getWeather('São Paulo')">São Paulo</button>
+    <button onclick="getWeather('Santiago')">Santiago</button>
+    <button onclick="getWeather('Nueva York')">Nueva York</button>
+    <button onclick="getWeather('Los Angeles')">Los Angeles</button>
+    <button onclick="getWeather('Toronto')">Toronto</button>
+    <button onclick="getWeather('Bogotá')">Bogotá</button>
+    <button onclick="getWeather('Caracas')">Caracas</button>
+  </div>
+
+  <div class="content">
+    <h1>Información Meteorológica</h1>
+    <canvas id="weatherChart"></canvas>
+    <div class="weatherData">
+      <div id="descriptionChart" class="weatherDataChart"></div>
+      <div id="humidityChart" class="weatherDataChart"></div>
+      <div id="windSpeedChart" class="weatherDataChart"></div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    let chart, descriptionChart, humidityChart, windSpeedChart;
+
+    async function getWeather(city) {
+      try {
+        const response = await fetch(`/weather/${city}`);
+        const data = await response.json();
+        const temperature = Math.round(data.main.temp - 273.15); // Conversión a Celsius
+        const description = data.weather[0].description;
+        const humidity = data.main.humidity;
+        const windSpeed = data.wind.speed;
+
+        if (chart) {
+          chart.data.labels.push(city);
+          chart.data.datasets[0].data.push(temperature);
+          chart.update();
+        } else {
+          const ctx = document.getElementById('weatherChart').getContext('2d');
+          chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: [city],
+              datasets: [{
+                label: 'Temperatura (°C)',
+                data: [temperature],
+                backgroundColor: '#36a2eb'
+              }]
+            },
+            options: {
+              scales: {
+                y: {
+                  beginAtZero: true
+                }
+              }
+            }
+          });
+        }
+
+        if (descriptionChart) {
+          descriptionChart.data.labels.push(city);
+          descriptionChart.data.datasets[0].data.push(1);
+          descriptionChart.update();
+        } else {
+          const descriptionCtx = document.getElementById('descriptionChart').getContext('2d');
+          descriptionChart = new Chart(descriptionCtx, {
+            type: 'bar',
+            data: {
+              labels: [city],
+              datasets: [{
+                label: 'Descripción',
+                data: [1],
+                backgroundColor: '#ffce56'
+              }]
+            },
+            options: {
+              scales: {
+                y: {
+                  beginAtZero: true
+                }
+              }
+            }
+          });
+        }
+
+        if (humidityChart) {
+          humidityChart.data.labels.push(city);
+          humidityChart.data.datasets[0].data.push(humidity);
+          humidityChart.update();
+        } else {
+          const humidityCtx = document.getElementById('humidityChart').getContext('2d');
+          humidityChart = new Chart(humidityCtx, {
+            type: 'bar',
+            data: {
+              labels: [city],
+              datasets: [{
+                label: 'Humedad',
+                data: [humidity],
+                backgroundColor: '#4bc0c0'
+              }]
+            },
+            options: {
+              scales: {
+                y: {
+                  beginAtZero: true
+                }
+              }
+            }
+          });
+        }
+
+        if (windSpeedChart) {
+          windSpeedChart.data.labels.push(city);
+          windSpeedChart.data.datasets[0].data.push(windSpeed);
+          windSpeedChart.update();
+        } else {
+          const windSpeedCtx = document.getElementById('windSpeedChart').getContext('2d');
+          windSpeedChart = new Chart(windSpeedCtx, {
+            type: 'bar',
+            data: {
+              labels: [city],
+              datasets: [{
+                label: 'Velocidad del Viento',
+                data: [windSpeed],
+                backgroundColor: '#ff6384'
+              }]
+            },
+            options: {
+              scales: {
+                y: {
+                  beginAtZero: true
+                }
+              }
+            }
+          });
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  </script>
+</body>
+</html>
